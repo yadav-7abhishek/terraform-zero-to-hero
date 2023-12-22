@@ -56,7 +56,22 @@ resource "aws_instance" "example" {
 
 ### In a child module
 
-You can also configure providers in a child module. This is useful if you want to reuse the same provider configuration in multiple resources.
+In Terraform, a "child module" refers to a separate directory or set of files containing Terraform configuration that is meant to be used as a reusable component within another terraform configuration.
+
+```yaml
+# Project/
+  | main.tf
+  | variables.tf
+  | output.tf
+  | aws_vpc/
+    | main.tf
+    | variables.tf
+    | output.tf
+  | aws_S3/
+    | main.tf
+    | variables.tf
+    | output.tf
+```
 
 ```hcl
 module "aws_vpc" {
@@ -72,6 +87,9 @@ resource "aws_instance" "example" {
   depends_on = [module.aws_vpc]
 }
 ```
+The 'project' directory contains the main configuration(main.tf), variable definitions(variable.tf) and output definitions for entire infrastructure.
+The 'aws_vpc' and 'aws_s3' are the child modules. They contain their own infrastructure.
+So when we use 'source= ./aws_vpc', it searches for terraform files in 'aws_vpc' directory that is located in the current directory.
 
 ### In the required_providers block
 
